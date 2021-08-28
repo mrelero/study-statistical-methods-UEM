@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.8.26)  26 AUG 2021 19:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.8.26)  28 AUG 2021 10:13
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -220,23 +220,29 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <14.4> on input line 16.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 16.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 24.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 24.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 24.
 [1
 
 {c:/Users/Usuario/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdf
 tex.map}] (./Relatorio.aux) ) 
 Here is how much of TeX's memory you used:
- 3570 strings out of 480502
- 57817 string characters out of 5897829
- 359287 words of memory out of 5000000
- 21188 multiletter control sequences out of 15000+600000
- 417980 words of font info for 53 fonts, out of 8000000 for 9000
+ 3600 strings out of 480502
+ 58165 string characters out of 5897829
+ 367287 words of memory out of 5000000
+ 21210 multiletter control sequences out of 15000+600000
+ 422593 words of font info for 64 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 72i,6n,80p,274b,193s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 72i,9n,80p,274b,286s stack positions out of 5000i,500n,10000p,200000b,80000s
 <c:/Users/Usuario/AppData/Roaming/TinyTeX/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmb10.pfb><c:/Users/Usuario/AppData/Roaming/T
 inyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/Users/Usuario/Ap
 pData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on Relatorio.pdf (1 page, 33108 bytes).
+Output written on Relatorio.pdf (1 page, 40084 bytes).
 PDF statistics:
  24 PDF objects out of 1000 (max. 8388607)
  13 compressed objects within 1 object stream
