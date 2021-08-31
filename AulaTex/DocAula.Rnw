@@ -1,0 +1,103 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{float}
+\usepackage[round]{natbib}
+\usepackage[pdftex]{pdfpages}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+% Uso do Comentário
+% Para ter chunk CRLT+ALT+I
+
+<<pacotes, echo = FALSE>>=
+library(ggplot2)
+library(tidyverse)
+library(nlme)
+@
+
+
+<<Funcoes, echo = FALSE, results = hide>>=
+ss<-1:5
+media <- function(df){
+  sum(df)/length(df)
+}
+media(ss)
+@
+
+
+<<dados, echo=FALSE, results=hide>>=
+data('diamonds')
+head(diamonds)
+dados <- as.data.frame(diamonds)
+head(dados)
+#Head Mostra apenas o começo dos dados
+dados[c(1000:1010, 2000, 5000),2:3]
+#
+#Vamos usar a funcao pipe, que canaliza a saída de uma funcao na entrada de outra
+# Pipe: CTRL+SHIFT+M
+dados <- dados %>% 
+  mutate(ind = 1:dim(dados)[1], .before=carat)
+
+head(dados)
+
+# transformando dados wide para long
+dadoslong <- dados %>% 
+  gather(direcao, coord, c(x,y,z))
+
+#podemos ordenar os dados por uma coluna
+dadoslong <- dadoslong %>% 
+  arrange(ind)
+
+head(dadoslong)
+dim(dadoslong)
+dim(dados)[1]
+#Pipe pega os dados e joga em uma função
+# transformando os dados long para wide
+dadoswide <- dadoslong %>% 
+  spread(direcao, coord)
+
+head(dadoswide)
+# Exportar os dados como CSV
+#Para obter o endereço: getwd()
+#write.csv(dadoslong, "C:/Users/Usuario/Matheus/Rproj/Projeto_Metodos_Estatisticos/diamondslong.csv")
+#
+#Ler os dados
+dadoslong2 <-read.csv("C:/Users/Usuario/Matheus/Rproj/Projeto_Metodos_Estatisticos/diamondslong.csv")
+head(dadoslong2)
+
+@
+
+
+\title{Análise Descrtiva dos Dados}
+
+\author{Aluno: Matheus Raphael Elero}
+
+\maketitle
+
+\section{Introdução}
+
+Aqui vai um arquivo com os comandos do ''knitr''
+
+Para incluir um pdf, usamos o pacote ''pdfpages''
+
+\includepdf[pages=1]{Artigo.pdf}
+
+\section{Dados}
+
+%Arquivo> Contar a história dos dados, escrever o que representa a situação
+
+<<echo=FALSE>>=
+head(dadoslong)
+@
+
+\section{Tipo de Variáveis}
+
+<<echo=FALSE>>=
+sapply(dados, class)
+@
+
+
+
+\end{document}

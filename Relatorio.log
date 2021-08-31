@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.8.26)  28 AUG 2021 10:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.8.26)  31 AUG 2021 15:41
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -78,7 +78,7 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibsep=\skip50
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count193
-) (c:/Program Files/R/R-4.1.1/share/texmf/tex/latex/Sweave.sty
+) (c:/Program Files/R/R-4.1.0/share/texmf/tex/latex/Sweave.sty
 Package: Sweave 
 (c:/Users/Usuario/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
@@ -242,7 +242,7 @@ Here is how much of TeX's memory you used:
 st/fonts/type1/public/amsfonts/cm/cmb10.pfb><c:/Users/Usuario/AppData/Roaming/T
 inyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/Users/Usuario/Ap
 pData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on Relatorio.pdf (1 page, 40084 bytes).
+Output written on Relatorio.pdf (1 page, 40113 bytes).
 PDF statistics:
  24 PDF objects out of 1000 (max. 8388607)
  13 compressed objects within 1 object stream
