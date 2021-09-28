@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.8.26)  31 AUG 2021 15:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.8.31)  21 SEP 2021 13:22
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
 **C:/Users/Usuario/Matheus/Rproj/Projeto_Metodos_Estatisticos/Relatorio.tex
 (c:/Users/Usuario/Matheus/Rproj/Projeto_Metodos_Estatisticos/Relatorio.tex
 LaTeX2e <2021-06-01> patch level 1
-L3 programming layer <2021-07-12>
+L3 programming layer <2021-08-27>
 (c:/Users/Usuario/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/02/12 v1.4n Standard LaTeX document class
 (c:/Users/Usuario/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size12.clo
@@ -78,7 +78,7 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibsep=\skip50
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count193
-) (c:/Program Files/R/R-4.1.0/share/texmf/tex/latex/Sweave.sty
+) (c:/Program Files/R/R-4.1.1/share/texmf/tex/latex/Sweave.sty
 Package: Sweave 
 (c:/Users/Usuario/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
@@ -231,10 +231,10 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 {c:/Users/Usuario/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdf
 tex.map}] (./Relatorio.aux) ) 
 Here is how much of TeX's memory you used:
- 3600 strings out of 480502
- 58165 string characters out of 5897829
- 367287 words of memory out of 5000000
- 21210 multiletter control sequences out of 15000+600000
+ 3597 strings out of 480559
+ 57954 string characters out of 5901612
+ 366214 words of memory out of 5000000
+ 21153 multiletter control sequences out of 15000+600000
  422593 words of font info for 64 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  72i,9n,80p,274b,286s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -242,7 +242,7 @@ Here is how much of TeX's memory you used:
 st/fonts/type1/public/amsfonts/cm/cmb10.pfb><c:/Users/Usuario/AppData/Roaming/T
 inyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/Users/Usuario/Ap
 pData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on Relatorio.pdf (1 page, 40113 bytes).
+Output written on Relatorio.pdf (1 page, 39912 bytes).
 PDF statistics:
  24 PDF objects out of 1000 (max. 8388607)
  13 compressed objects within 1 object stream
