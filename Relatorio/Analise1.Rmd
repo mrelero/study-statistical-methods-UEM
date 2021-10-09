@@ -1,0 +1,98 @@
+---
+title: "Primeira Análise"
+author: "Omar Cléo"
+date: "`r format(Sys.time(),'%d %B %Y')`"
+output: bookdown::html_document2
+#bibliography: bibliografia.bib
+---
+
+```{r setup , include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      size = "footnotesize",
+                      comment = NA,
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.align = "center",
+                      fig.width = 8, 
+                      fig.height = 4, 
+                      fig.show = "hold",
+                      fig.path = "FigurasDplyr/",
+                      fig.pos = "!htb",
+                      background = "#E6E6FA",
+                      dev = c("png",'pdf'),
+                      res=300,
+                      dpi = 300,
+                      cache = TRUE)
+```
+
+```{r library, results='hide', echo=FALSE}
+library(tidyverse)
+library(magrittr)
+library(evaluate)
+library(hexbin)
+```
+
+```{r functions, results='hide', echo=FALSE}
+# Uma funcao para a media
+media <- function(x){sum(x)/length(x)}
+```
+
+```{r dataset, echo=F, results='hide'}
+#data(package='ggplot2')
+#help("diamonds")
+data('diamonds')
+#View(diamonds)
+dados <- as.data.frame(diamonds)
+dados <- dados %>% 
+  mutate(ind = 1:dim(dados)[1], .before=carat)
+# Transformar wide para long (x, y, z)
+# A função pipe (%>%) canaliza a saída de uma função
+# control + shift + m
+dadoslong <- dados %>% 
+  gather(direcao, coord, c(x,y,z))
+# podemos ordenar os dados por colula
+dadoslong <- dadoslong %>% arrange(ind)
+# transformando long para wide
+dadoswide <- dadoslong %>% 
+  spread(direcao,coord)
+# salvar os dados em um diretorio
+# para achar o caminho do diretorio: getwd()
+#write.csv(dadoslong,"C:/Users/perei/OneDrive/Área de Trabalho/MetodosEstatisticos/dimondsLong.csv")
+#dadoslong2 <- read.csv("C:/Users/perei/OneDrive/Área de Trabalho/MetodosEstatisticos/dimondsLong.csv")
+
+```
+
+# Variáveis $x$ e $y$
+
+Quando usamos todos os dados, inclusive os *outliers*, a correlação entre as variáveis $x$ e $y$ é ````r round(cor(dados$x,dados$y),4)```` `r cor(dados$x,dados$y)`. Podemos ver estes _outliers_ no gráfico da Figura \@ref(fig:doutl).
+
+```{r doutl, fig.cap='Variáveis $x$ e $y$ com os _outliers_', echo=FALSE}
+#plot(y~x,data = dados)
+#dados %>% ggplot(aes(x=x,y=y)) + geom_point()
+
+```
+
+Quando retiramos os dois pontos _outliers_, vemos que a correlação linear de Pearson aumenta de `r round(cor(dados$x,dados$y),4)` para `r round(cor(dados[-which(dados$y>25),]$x,dados[-which(dados$y>25),]$y),4)`. O gráfico da Figura \@ref(fig:doutl2) mostra estes detalhes.
+
+
+
+```{r doutl2, fig.cap='Variáveis $x$ e $y$ sem os pontos *outliers*.' , echo=FALSE, results='hide'}
+cor(dados$x,dados$y)
+which(dados$y>25)
+dados[-which(dados$y>25),] %>% ggplot(aes(x,y)) +
+  geom_point()
+cor(dados[-which(dados$y>25),]$x,dados[-which(dados$y>25),]$y)
+```
+
+
+```{r fig.show='hide', echo=FALSE, results='hide'}
+cor(dados$x,dados$y)
+which(dados$y>25)
+dados[-which(dados$y>25),] %>% ggplot(aes(x,y)) +
+  geom_point()
+cor(dados[-which(dados$y>25),]$x,dados[-which(dados$y>25),]$y)
+```
+
+
+
+

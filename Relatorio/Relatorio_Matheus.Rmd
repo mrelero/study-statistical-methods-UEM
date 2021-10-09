@@ -1,0 +1,148 @@
+---
+title: "Relatorio - Análise 1"
+author: "Matheus Elero"
+date: "09/10/2021"
+output: pdf_document
+---
+
+```{r setup , include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      size = "footnotesize",
+                      comment = NA,
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.align = "center",
+                      fig.width = 8, 
+                      fig.height = 4, 
+                      fig.show = "hold",
+                      fig.path = "FigurasDplyr/",
+                      fig.pos = "!htb",
+                      background = "#E6E6FA",
+                      dev = c("png",'pdf'),
+                      res=300,
+                      dpi = 300,
+                      cache = TRUE)
+```
+
+```{r library, results='hide', echo=FALSE}
+library(tidyverse)
+library(magrittr)
+library(evaluate)
+library(hexbin)
+```
+
+
+# Dados
+
+
+```{r dataset, echo=F, results='hide'}
+#data(package='ggplot2')
+#help("diamonds")
+data('diamonds')
+#View(diamonds)
+dados <- as.data.frame(diamonds)
+dados <- dados %>% 
+  mutate(ind = 1:dim(dados)[1], .before=carat)
+# Transformar wide para long (x, y, z)
+# A função pipe (%>%) canaliza a saída de uma função
+# control + shift + m
+dadoslong <- dados %>% 
+  gather(direcao, coord, c(x,y,z))
+# podemos ordenar os dados por colula
+dadoslong <- dadoslong %>% arrange(ind)
+# transformando long para wide
+dadoswide <- dadoslong %>% 
+  spread(direcao,coord)
+# salvar os dados em um diretorio
+# para achar o caminho do diretorio: getwd()
+
+```
+
+
+Os dados apresentados por esse relatório exploram o preço de diamantes baseado em algumas de suas características. Para isso, foi extrarído uma base chamada Diamonds da Biblioteca GGPLOT 2. O Head dos dados está apresentado pela Tabela 1 em format Wide, observe que existem 11 colunas e `r nrow(dados)` linhas. 
+
+
+**Tabela 1: Head dos dados extraídos**
+```{r head_dados, echo=F}
+
+head(dados)
+#[comment]: <> ![Dimensões](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvxMg4P9TfLGLgy7zL8A46Dr_fa7LIhZo_ApvYRqM9D9gzlBKUY4FRq3M8MBgJBuOWyl4&usqp=CAU)
+```
+
+Cada columa representa a seguinte descrição: 
+
+
+**Tabela 2: Descrição dos Headers.**
+
+| Coluna  | Classificação | Variável | Descrição                                                                                   |
+|---------|---------------|----------|---------------------------------------------------------------------------------------------|
+| Price   | Quantitativa  | Contínua | Preço do diamante em Dólar                                                                  |
+| Carat   | Quantitativa  | Contínua | Peso do diamante                                                                            |
+| Cut     | Qualitativa   | Nominal  | Qualidade do Corte                                                                          |
+| Color   | Qualitativa   | Nominal  | Cor D(Melhor) para J(Pior)                                                                  |
+| Clarity | Qualitativa   | Nominal  | Medição de quão claro é o diamante (I1 (pior), SI2, SI1, VS2, VS1, VVS2, VVS1, IF (melhor)) |
+| x       | Quantitativa  | Contínua | Comprimento                                                                                 |
+| y       | Quantitativa  | Contínua | Largura                                                                                     |
+| z       | Quantitativa  | Contínua | Profundidade                                                                                |
+| Depth   | Quantitativa  | Contínua | porcentagem de profundidade total = z / média (x, y) = 2 * z / (x + y) (43-79)              |
+| Table   | Quantitativa  | Contínua | largura do topo do diamante em relação ao ponto mais largo (43-95)                          |
+
+
+
+
+# Análise Descritiva
+
+## Variáveis
+
+Aqui serão apresentadas uma análise geral a respeito de todos os parâmetos da base de dados.  A começar pela variável principal, o preço, que por uma visão mais simplista possui média igual `r mean(dados$price)` Dólares, variância equivalente  e desvio padrão `r sd(dados$price)`. Um histograma da Figura 1 mostra a alta variabilidade dos dados, o que representa uma dificuldade grande para prever preços de diamantes, pois estes não seguem um padrão óbio e assertivo. 
+
+```{r hist_price,fig.cap='Histograma Preço', echo=F}
+
+hist(dados$price, xlab = "Preço", main="Histograma do Preço")
+
+```
+
+Para os valores dimensões x, y, z, depth e table, os dados são apresentados pela tabela a seguir: 
+
+| Coluna  | Média              | Variância        | Desvio Padrão    |            
+|---------|--------------------|------------------|------------------|
+| x     | `r mean(dados$x)`  | `r var(dados$x)` | `r sd(dados$x)`  |
+| y       | `r mean(dados$y)`  | `r var(dados$y)` | `r sd(dados$y)`  |
+| z       | `r mean(dados$z)`  | `r var(dados$z)` | `r sd(dados$z)`  |
+| Depth   | `r mean(dados$depth)`  | `r var(dados$depth)` | `r sd(dados$depth)`  |
+| Table   | `r mean(dados$table)`  | `r var(dados$table)` | `r sd(dados$table)`  |
+| Carat   | `r mean(dados$carat)`  | `r var(dados$carat)` | `r sd(dados$carat)`  |
+
+
+Uma visuzalização melhor pode ser vista nos histogramas da Figura 2, onde é possível observar que as dimensões x, y e z possuem uma variabilidade maior, mas em questão de Depth e  Table, os dados estão mais concentrados em torno da média. Isso é possível obervar pela variância e desvio padrão calculados, nota-se que para x e y o desvio padrão foi em torno de 1.1, bastante significativo próxima da média. 
+
+```{r hist_dim, fig.cap='Histogramas das caraterísticas contínuas dos dados.',echo=F}
+
+par(mfrow=c(2,3))
+hist(dados$x, xlab = "Dimensão X", main="Histograma de X")
+hist(dados$y, xlab = "Dimensão y", main="Histograma de y", xlim = c(0,11), breaks = 100)
+hist(dados$z, xlab = "Dimensão z", main="Histograma de z", xlim =c(0,10), breaks = 100)
+hist(dados$depth, xlab = "Depth", main="Histograma de Depth", xlim = c(50,70), breaks = 100)
+hist(dados$table, xlab = "Table", main="Histograma de Table", xlim = c(40,70), breaks = 50)
+hist(dados$carat, xlab = "Carat", main="Histograma de Carat", xlim = c(0,3), breaks = 50)
+```
+
+Para as colunas com variáveis Qualitativas e Nominais, foi utilizado um gráfico de pizza para apresentar os resultados (Figura 3).  Como é possível observar, em relação aos cortes 40% são considerados ideais, e 26% premium. Para clareza, apenas 1% tem o pior valor de "I1" e 3% do melhor "1F", e a maioria dos diamantes estão classificados como SI1 VS2, que representam claresas intermediárias. Já para as cores, existe certo equilíbrio, porém apenas 5% dos dados são relativos a pior cor(J) e 13% como a melhor (D). 
+
+```{r pie_charts, fig.cap='Gráficos de Pizza com as variáveis qualitativas nominais',  echo=F}
+
+cortes <- round(prop.table(table(dados$cut))*100,0)
+clareza <-round(prop.table(table(dados$clarity))*100,0)
+cores <-round(prop.table(table(dados$color))*100,0)
+
+par(mfrow=c(1,3))
+pie(cortes, col=rainbow(length(table(dados$cut))), label = paste(names(cortes), cortes, "%") , main = "Cortes")
+pie(clareza, col=rainbow(length(table(dados$clarity))), label = paste(names(clareza), clareza, "%"), main= "Clarity")
+pie(cores, col=rainbow(length(table(dados$color))), label = paste(names(cores), cores, "%"), main="Cores")
+```
+
+
+\newpage
+
+## Análise de Correlação
+
