@@ -62,17 +62,19 @@ dadoswide <- dadoslong %>%
 Os dados apresentados por esse relatório exploram o preço de diamantes baseado em algumas de suas características. Para isso, foi extrarído uma base chamada Diamonds da Biblioteca GGPLOT 2. O Head dos dados está apresentado pela Tabela 1 em format Wide, observe que existem 11 colunas e `r nrow(dados)` linhas. 
 
 
-**Tabela 1: Head dos dados extraídos**
 ```{r head_dados, echo=F}
 
 head(dados)
 #[comment]: <> ![Dimensões](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvxMg4P9TfLGLgy7zL8A46Dr_fa7LIhZo_ApvYRqM9D9gzlBKUY4FRq3M8MBgJBuOWyl4&usqp=CAU)
 ```
 
+Tabela 1: Head dos dados extraídos
+
+
 Cada columa representa a seguinte descrição: 
 
 
-**Tabela 2: Descrição dos Headers.**
+
 
 | Coluna  | Classificação | Variável | Descrição                                                                                   |
 |---------|---------------|----------|---------------------------------------------------------------------------------------------|
@@ -87,6 +89,7 @@ Cada columa representa a seguinte descrição:
 | Depth   | Quantitativa  | Contínua | porcentagem de profundidade total = z / média (x, y) = 2 * z / (x + y) (43-79)              |
 | Table   | Quantitativa  | Contínua | largura do topo do diamante em relação ao ponto mais largo (43-95)                          |
 
+Tabela 2: Descrição dos Headers.
 
 
 
@@ -113,6 +116,7 @@ Para os valores dimensões x, y, z, depth e table, os dados são apresentados pe
 | Table   | `r mean(dados$table)`  | `r var(dados$table)` | `r sd(dados$table)`  |
 | Carat   | `r mean(dados$carat)`  | `r var(dados$carat)` | `r sd(dados$carat)`  |
 
+Tabela 3: Média, Variância e Desvio para as grandezas quantitativas e contínuas
 
 Uma visuzalização melhor pode ser vista nos histogramas da Figura 2, onde é possível observar que as dimensões x, y e z possuem uma variabilidade maior, mas em questão de Depth e  Table, os dados estão mais concentrados em torno da média. Isso é possível obervar pela variância e desvio padrão calculados, nota-se que para x e y o desvio padrão foi em torno de 1.1, bastante significativo próxima da média. 
 
@@ -145,4 +149,99 @@ pie(cores, col=rainbow(length(table(dados$color))), label = paste(names(cores), 
 \newpage
 
 ## Análise de Correlação
+
+A Matriz de Correlação disponibilizada a seguir apresenta o Coeficiente de Correlação calculado para todos os parânetros par a par. Com isso é possível identificar quais deles possuem alta relação linear, como por exemplo preço com carat, x, y e z. As variáveis que tem maiores valores são entre x, y e z, o que faz sentido, pois tratam-se de dimensões do diamente, e naturalmente uma pode dependeder da outra. Para tornar a análise mais objetiva, serão consideradas apenas correlações absolutas maiores que 0.8.
+
+```{r Coor,  echo=F}
+data_new <- sapply(dados, unclass) #Convert Dados Categóricos em Numéricos
+cormat <- round(cor(data_new),2) #Matriz de Correlação
+#heatmap(cormat, Colv = NA, Rowv = NA)
+
+print(cormat)
+```
+Tabela 4: Matriz de Correlação
+
+ 
+As correlações analisadas a seguir são listadas abaixo:
+
+* Preço x Carat: `r cormat["carat","price"]`
+* Preço x X: `r cormat["price","x"]`
+* Preço x Y: `r cormat["price","y"]`
+* Preço x Z: `r cormat["price","z"]`
+* Carat x X: `r cormat["carat","x"]`
+* Carat x Y: `r cormat["carat","y"]`
+* Carat x Z: `r cormat["carat","z"]`
+* Y x X: `r cormat["y","x"]`
+* Y x Z: `r cormat["y","z"]`
+* X x Z: `r cormat["x","z"]`
+
+Os grásficos apresentados pela Figura 4 mostram claramente a relação relativa entre as variáveis, em algumas delas o comportamento é quase linear, a relação entre as medidas x, y e z, e Carat com as dimensões. Como visto na análise anterior, o preço possui uma dispersão e desvio altos, o que é possível visualizar melhor aqui, pois os pontos estão mais dispersos. 
+
+```{r scatter_cor_1, fig.cap='Gráficos de Dispersão para Correlação com Outiliers',  echo=F}
+
+
+par(mfrow=c(2,5))
+plot(x = dados$carat, y = dados$price, xlab = "Carat", ylab = "Price")
+plot(x = dados$x, y = dados$price, xlab = "x", ylab = "Price")
+plot(x = dados$y, y = dados$price, xlab = "y", ylab = "Price")
+plot(x = dados$z, y = dados$price, xlab = "z", ylab = "Price")
+plot(x = dados$x, y = dados$carat, xlab = "x", ylab = "Carat")
+plot(x = dados$y, y = dados$carat, xlab = "y", ylab = "Carat")
+plot(x = dados$z, y = dados$carat, xlab = "z", ylab = "Carat")
+plot(x = dados$x, y = dados$y, xlab = "x", ylab = "y")
+plot(x = dados$y, y = dados$z, xlab = "y", ylab = "z")
+plot(x = dados$x, y = dados$z, xlab = "x", ylab = "z")
+
+
+
+```
+
+
+Com uma inspeção visual dos gráficos de dispersão é possível identificar Outliers, ou valores fora do comum, que podem ser execessões, erros de coleta ou ruídos. Para tornar a análise de correlação mais efetiva, foi realizada a remoção desse pontos, que resultou em uma melhor visualização (Figura 5). Assim, é as relaçãos de dimensões(x, y e z) possuem comportamento quase que linear, já preço e carat tem um padrão semelhante ao exponencial. 
+
+
+```{r scatter_cor_2, fig.cap='Gráficos de Dispersão para Correlação com remoção de Outiliers',  echo=F}
+
+
+par(mfrow=c(2,5))
+plot(y = dados[-which(dados$carat>3),]$price,x = dados[-which(dados$carat>3),]$carat ,xlab = "Carat", ylab = "Price")
+plot(x = dados[-which(dados$x<2),]$x, y = dados[-which(dados$x<2),]$price, xlab = "x", ylab = "Price")
+plot(x = dados[which(dados$y<20 & dados$y>2),]$y, y = dados[which(dados$y<20 & dados$y>2),]$price, xlab = "y", ylab = "Price")
+plot(x = dados[which(dados$z<6 & dados$z>2),]$z, y = dados[which(dados$z<6 & dados$z>2),]$price, xlab = "z", ylab = "Price")
+plot(x = dados[which(dados$x>2),]$x, y = dados[which(dados$x>2),]$carat, xlab = "x", ylab = "Carat")
+plot(x = dados[which(dados$y<20 & dados$y>0),]$y, y = dados[which(dados$y<20 & dados$y>0),]$carat, xlab = "y", ylab = "Carat")
+plot(x = dados[which(dados$z<8 & dados$z>2),]$z, y = dados[which(dados$z<8 & dados$z>2),]$carat, xlab = "z", ylab = "Carat")
+plot(dados[which(dados$y<25 & dados$y>2),]$x,dados[which(dados$y<25 & dados$y>2),]$y, xlab = "x", ylab = "y")
+plot(x = dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$y, y = dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$z, xlab = "y", ylab = "z")
+plot(x = dados[which(dados$z<20 & dados$z>2),]$x, y = dados[which(dados$z<20 & dados$z>2),]$z, xlab = "x", ylab = "z")
+
+
+
+```
+Execeto nas relações entre Preço e Carat, e Carat e X, todas as outras apresentaram resultados correlações melhoradas após a remoção de outiliers. Como os dados estão arrendodados para 2 casas decimais, os casos de x, y e z apresentaram correlação próxima de 1, um resultado bastante expressivo, porém extremamente lógico, pois tratam-se de dimensões do diamente, e podem ter relações naturalmente dependentes. Carat também possui uma boa correlação com essa grandezas, o que é também é condizente, pois Carat é a principal característica utilizada para classificar o peso e dimensão de um diamante. A Tabela 5 apresenta um comparativo entre os dados de correlação.
+
+
+| X e Y         |  com Outliers                  |  sem Outliers           |
+|---------------|--------------------------------|-------------------------|
+| Carat e Price |  `r cormat["carat","price"]`   | `r round(cor(dados[-which(dados$carat>3),]$price, dados[-which(dados$carat>3),]$carat),2)`                         |
+| X e Price     |  `r cormat["price","x"]`       | `r round(cor(dados[-which(dados$x<2),]$x,dados[-which(dados$x<2),]$price),2)`                        |
+| Y e Price     |  `r cormat["price","y"]`       | `r round(cor(dados[which(dados$y<20 & dados$y>2),]$y,dados[which(dados$y<20 & dados$y>2),]$price),2)`                        |
+| Z e Price     |  `r cormat["price","z"]`       |`r round(cor(dados[which(dados$z<6 & dados$z>2),]$z,dados[which(dados$z<6 & dados$z>2),]$price),2)`     |
+| Carat e X     |   `r cormat["carat","x"]`      |`r round(cor( dados[which(dados$x>2),]$x,dados[which(dados$x>2),]$carat),2)`         |
+| Carat e Y     |    `r cormat["carat","y"]`     |`r round(cor( dados[which(dados$y<20 & dados$y>0),]$y,dados[which(dados$y<20 & dados$y>0),]$carat),2)`             |
+| Carat e Z     |   `r cormat["carat","z"]`      |`r round(cor(dados[which(dados$z<8 & dados$z>2),]$z,dados[which(dados$z<8 & dados$z>2),]$carat),2)`             |
+| Y e X         |   `r cormat["y","x"]`          |`r round(cor(dados[which(dados$y<25 & dados$y>2),]$x,dados[which(dados$y<25 & dados$y>2),]$y),2)`               |
+| Z e Y         |    `r cormat["y","z"]`         |`r round(cor( dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$y, dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$z),2)`               |
+| Z e X         |    `r cormat["x","z"]`         |`r round(cor(dados[which(dados$z<20 & dados$z>2),]$x,dados[which(dados$z<20 & dados$z>2),]$z),2)`             |
+
+Tabela 5: Comparação de Correlações Com e Sem Outliers
+
+# Conclusão
+
+A base de dados apresentada nesse relatório possui registros de `r nrow(dados)` Diamantes, com atributos de preço, dimensões, Carat, Cores, Cortes e Clareza. É comum que para esse caso o objetivo principal de estudo dos dados é construir um modelo de regressão para precificar um diamante de forma mais assertiva, pois como é possível observar pela Figura 1, os valores das pedras possuem alta variabilidade, o que faz com que esses valores assumam resultados dispersos e pouco previsíveis. Dessa forma, outros atributos possuem dados mais restritos, como as dimensões x, y e z, que são fatores importantes para classificar o Carat e consequentemente o preço. 
+
+Portanto, a análise de correlação é fundamental para atribuir o preço e definir padrões. Os resultados das Figuras 4 e 5 mostram a clara relação de dependência Não-Linear entre Preço e Carat, que pode ser utilizado para construção de uma função de regressão adequada. Para esse caso também pode ser utilizada a regressão linear, porém o produto final pode ser pouco preciso e assertivo. Preço também possui uma alta correlação com X, Y e Z, assim como Carat, e a construção de um modelo com a união entre esses fatores pode contribuir com maior qualidade dos resultados. 
+
+
+
 
