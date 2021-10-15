@@ -1,8 +1,15 @@
 ---
 title: "Relatorio - Análise 1"
 author: "Matheus Elero"
-date: "09/10/2021"
-output: pdf_document
+date: "`r format(Sys.time(),'%d %B %Y')`"
+#output: pdf_document
+output: 
+  bookdown::pdf_document2:
+    fig_caption: yes
+
+header-includes:
+ \usepackage{float}
+ \floatplacement{figure}{H}
 ---
 
 ```{r setup , include=FALSE}
@@ -32,6 +39,7 @@ library(hexbin)
 ```
 
 
+\newpage
 # Dados
 
 
@@ -59,7 +67,7 @@ dadoswide <- dadoslong %>%
 ```
 
 
-Os dados apresentados por esse relatório exploram o preço de diamantes e suas características. Para isso, foi extrarído uma base chamada Diamonds da Biblioteca GGPLOT 2. O Head dos dados está apresentado pela Tabela 1 em format Wide, o conjunto total possui 11 colunas e `r nrow(dados)` linhas. 
+Os dados apresentados por esse relatório exploram o preço de diamantes e suas características. Para isso, foi extrarído uma base chamada Diamonds da Biblioteca GGPLOT 2. O Head dos dados está apresentado pela Tabela 1 em format Wide, o conjunto total possui `r ncol(dados)` colunas e `r nrow(dados)` linhas. 
 
 
 ```{r head_dados, echo=F}
@@ -102,9 +110,9 @@ knitr::include_graphics("Diamante.png")
 
 ## Variáveis
 
-Aqui será apresentada uma análise geral a respeito de todos os parâmetos da base de dados.  A começar pela variável principal, o preço, que por uma visão mais simplista possui média igual `r mean(dados$price)` Dólares, e desvio padrão igual a `r sd(dados$price)`. Um histograma da Figura 2 mostra a alta variabilidade dos dados, o que indica uma dificuldade grande para prever preços de diamantes, pois estes não seguem um padrão óbio e assertivo. 
+Aqui será apresentada uma análise geral a respeito de todos os parâmetos da base de dados.  A começar pela variável principal, o preço, que por uma visão mais simplista possui média igual `r mean(dados$price)` Dólares, e desvio padrão igual a `r sd(dados$price)`. Um histograma da Figura \@ref(fig:price) mostra a alta variabilidade dos dados, o que indica uma dificuldade grande para prever preços de diamantes, pois estes não seguem um padrão óbio e assertivo. 
 
-```{r hist_price,fig.cap='Histograma Preço', echo=F}
+```{r price,fig.cap='Histograma Preço', echo=F,   fig.pos="H"}
 
 hist(dados$price, xlab = "Preço", main="Histograma do Preço")
 
@@ -123,9 +131,9 @@ Para os valores dimensões x, y, z, depth, table e carat, os dados são apresent
 
 Tabela 3: Média, Variância e Desvio para as grandezas quantitativas e contínuas
 
-Uma visuzalização melhor pode ser vista nos histogramas da Figura 3, onde é possível observar que as dimensões x, y e z possuem uma variabilidade maior, mas em questão de Depth e  Table, os dados estão mais concentrados em torno da média. Esses resultados mostram que existe diversidade nos diamantes catalogados, com várias dimensões de x, y e z. O parâmetro "Carat" também possui alta variabilidade, que é consequente aos valores dimensionais, pois essa característica é relacionado ao tamanho e peso da pedra. 
+Uma visuzalização melhor pode ser vista nos histogramas da Figura \@ref(fig:dim), onde é possível observar que as dimensões x, y e z possuem uma variabilidade maior, mas em questão de Depth e  Table, os dados estão mais concentrados em torno da média. Esses resultados mostram que existe diversidade nos diamantes catalogados, com várias dimensões de x, y e z. O parâmetro "Carat" também possui alta variabilidade, que é consequente aos valores dimensionais, pois essa característica é relacionado ao tamanho e peso da pedra. 
 
-```{r hist_dim, fig.cap='Histogramas das caraterísticas contínuas dos dados.',echo=F}
+```{r dim, fig.cap='Histogramas das caraterísticas contínuas dos dados.', fig.pos="H",echo=F}
 
 par(mfrow=c(2,3))
 hist(dados$x, xlab = "Dimensão X", main="Histograma de X")
@@ -136,9 +144,9 @@ hist(dados$table, xlab = "Table", main="Histograma de Table", xlim = c(40,70), b
 hist(dados$carat, xlab = "Carat", main="Histograma de Carat", xlim = c(0,3), breaks = 50)
 ```
 
-Para as colunas com variáveis Qualitativas e Nominais, foi utilizado um gráfico de pizza para apresentar os resultados (Figura 4).  Como é possível observar, em relação aos cortes 40% são considerados ideais, e 26% premium. Para clareza, apenas 1% tem o pior valor de "I1" e 3% do melhor "1F", e a maioria dos diamantes estão classificados como SI1 VS2, que representam claresas intermediárias. Já para as cores, existe certo equilíbrio, porém apenas 5% dos dados são relativos a pior cor(J) e 13% como a melhor (D). 
+Para as colunas com variáveis Qualitativas e Nominais, foi utilizado um gráfico de pizza para apresentar os resultados (Figura \@ref(fig:pie)).  Como é possível observar, em relação aos cortes 40% são considerados ideais, e 26% premium. Para clareza, apenas 1% tem o pior valor de "I1" e 3% do melhor "1F", e a maioria dos diamantes estão classificados como SI1 VS2, que representam claresas intermediárias. Já para as cores, existe certo equilíbrio, porém apenas 5% dos dados são relativos a pior cor(J) e 13% como a melhor (D). 
 
-```{r pie_charts, fig.cap='Gráficos de Pizza com as variáveis qualitativas nominais',  echo=F}
+```{r pie, fig.cap='Gráficos de Pizza com as variáveis qualitativas nominais',  fig.pos="H",  echo=F}
 
 cortes <- round(prop.table(table(dados$cut))*100,0)
 clareza <-round(prop.table(table(dados$clarity))*100,0)
@@ -180,9 +188,9 @@ As correlações analisadas a seguir são listadas abaixo:
 * Y x Z: `r cormat["y","z"]`
 * X x Z: `r cormat["x","z"]`
 
-Os gráficos de dispersão apresentados pela Figura 4 mostram claramente a relação relativa entre as variáveis, em algumas delas o comportamento é quase linear, como x em relação a y, x em relação a z, e outros. Como visto na análise anterior, o preço possui alta dispersão e desvio, sendo possível visualizar de outra forma na Figura 4, pois os pontos estão mais dispersos, devido a alta diversidade de valores. 
+Os gráficos de dispersão apresentados pela Figura \@ref(fig:scattercor1) mostram claramente a relação relativa entre as variáveis, em algumas delas o comportamento é quase linear, como x em relação a y, x em relação a z, e outros. Como visto na análise anterior, o preço possui alta dispersão e desvio, sendo possível visualizar de outra forma na Figura \@ref(fig:scattercor1), pois os pontos estão mais dispersos, devido a alta diversidade de valores. 
 
-```{r scatter_cor_1, fig.cap='Gráficos de Dispersão para Correlação com Outiliers',  echo=F}
+```{r scattercor1, fig.cap='Gráficos de Dispersão para Correlação com Outiliers', fig.pos="H",  echo=F}
 
 
 par(mfrow=c(2,5))
@@ -202,10 +210,10 @@ plot(x = dados$x, y = dados$z, xlab = "x", ylab = "z")
 ```
 
 
-Com uma inspeção visual dos gráficos de dispersão é possível identificar Outliers, ou valores fora do comum, que podem ser excessões, erros de coleta ou ruídos. Para tornar a análise de correlação mais efetiva, foi realizada a remoção desse pontos, que resultou em uma melhor visualização (Figura 5). Portanto, as relaçãos de dimensões(x, y e z) possuem comportamento quase que linear, já preço e carat tem um padrão semelhante ao exponencial (Correlação Não-Linear). 
+Com uma inspeção visual dos gráficos de dispersão é possível identificar Outliers, ou valores fora do comum, que podem ser excessões, erros de coleta ou ruídos. Para tornar a análise de correlação mais efetiva, foi realizada a remoção desse pontos, que resultou em uma melhor visualização (Figura \@ref(fig:scattercor2)). Portanto, as relaçãos de dimensões(x, y e z) possuem comportamento quase que linear, já preço e carat tem um padrão semelhante ao exponencial (Correlação Não-Linear). 
 
 
-```{r scatter_cor_2, fig.cap='Gráficos de Dispersão para Correlação com remoção de Outiliers',  echo=F}
+```{r scattercor2, fig.cap='Gráficos de Dispersão para Correlação com remoção de Outiliers', fig.pos="H" , echo=F}
 
 
 par(mfrow=c(2,5))
@@ -245,7 +253,7 @@ Tabela 5: Comparação de Correlações Com e Sem Outliers
 
 A base de dados apresentada nesse relatório possui registros de `r nrow(dados)` Diamantes, com atributos de preço, dimensões, Carat, Cores, Cortes e Clareza. É comum que para esse caso o objetivo principal de estudo dos dados é construir um modelo de regressão para precificar um diamante de forma mais assertiva, pois como é possível observar pela Figura 1, os valores das pedras possuem alta variabilidade, o que faz com que esses valores assumam resultados dispersos e pouco previsíveis.
 
-Portanto, a análise de correlação é fundamental para atribuir o preço e definir padrões. Os resultados das Figuras 4 e 5 mostram a clara relação de dependência Não-Linear entre Preço e Carat, que pode ser utilizado para construção de uma função de regressão adequada. Para esse caso também pode ser utilizada a regressão linear, porém o produto final pode ser pouco preciso. Preço também possui uma alta correlação com X, Y e Z, assim como Carat, e a construção de um modelo com a união entre esses fatores pode contribuir com maior qualidade dos resultados. 
+Portanto, a análise de correlação é fundamental para atribuir o preço e definir padrões. Os resultados das Figuras \@ref(fig:scattercor1) e \@ref(fig:scattercor2) mostram a clara relação de dependência Não-Linear entre Preço e Carat, que pode ser utilizado para construção de uma função de regressão adequada. Para esse caso também pode ser utilizada a regressão linear, porém o produto final pode ser pouco preciso. Preço também possui uma alta correlação com X, Y e Z, assim como Carat, e a construção de um modelo com a união entre esses fatores pode contribuir com maior qualidade dos resultados. 
 
 
 
