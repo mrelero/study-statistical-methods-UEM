@@ -36,6 +36,7 @@ library(tidyverse)
 library(magrittr)
 library(evaluate)
 library(hexbin)
+library(kableExtra)
 ```
 
 
@@ -67,43 +68,49 @@ dadoswide <- dadoslong %>%
 ```
 
 
-Os dados apresentados por esse relatório exploram o preço de diamantes e suas características. Para isso, foi extrarído uma base chamada Diamonds da Biblioteca GGPLOT 2. O Head dos dados está apresentado pela Tabela 1 em format Wide, o conjunto total possui `r ncol(dados)` colunas e `r nrow(dados)` linhas. 
+Os dados apresentados por esse relatório exploram o preço de diamantes e suas características. Para isso, foi extrarído uma base chamada Diamonds da Biblioteca GGPLOT 2. O Head dos dados está apresentado pela Tabela \@ref(tab:headdados) em format Wide, o conjunto total possui `r ncol(dados)` colunas e `r nrow(dados)` linhas. 
 
 
-```{r head_dados, echo=F}
+```{r headdados, echo=F}
 
-head(dados)
+hd_data <- head(dados)
+
+knitr::kable(hd_data, caption = "Head dos dados extraídos.") %>% kable_styling(latex_options = "HOLD_position")
 #[comment]: <> ![Dimensões](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvxMg4P9TfLGLgy7zL8A46Dr_fa7LIhZo_ApvYRqM9D9gzlBKUY4FRq3M8MBgJBuOWyl4&usqp=CAU)
 ```
 
-Tabela 1: Head dos dados extraídos
 
 
-Cada coluna representa a seguinte descrição: 
+Os parâmetros/colunas dos dados possuem um misto de classificação e tipos de variáveis. Dentre o conjunto, apenas 3 são classificadas como Qualitativas Nominais, e representam características subjetivas como cor, corte e claridade. As demais são variáveis Quantitativas Contínuas, e indicam medidas do diamente, como comprimento, peso e preço. A Tabela \@ref(tab:tabelavar) apresenta um resumo das colunas dispostas na base de dados.
+
+```{r tabelavar, echo=F}
 
 
-
-
-| Coluna  | Classificação | Variável | Descrição                                                                                   |
-|---------|---------------|----------|---------------------------------------------------------------------------------------------|
-| Price   | Quantitativa  | Contínua | Preço do diamante em Dólar                                                                  |
-| Carat   | Quantitativa  | Contínua | Peso do diamante                                                                            |
-| Cut     | Qualitativa   | Nominal  | Qualidade do Corte                                                                          |
-| Color   | Qualitativa   | Nominal  | Cor D(Melhor) para J(Pior)                                                                  |
-| Clarity | Qualitativa   | Nominal  | Medição de quão claro é o diamante (I1 (pior), SI2, SI1, VS2, VS1, VVS2, VVS1, IF (melhor)) |
-| x       | Quantitativa  | Contínua | Comprimento                                                                                 |
-| y       | Quantitativa  | Contínua | Largura                                                                                     |
-| z       | Quantitativa  | Contínua | Profundidade                                                                                |
-| Depth   | Quantitativa  | Contínua | porcentagem de profundidade total = z / média (x, y) = 2 * z / (x + y) (43-79)              |
-| Table   | Quantitativa  | Contínua | largura do topo do diamante em relação ao ponto mais largo (43-95)                          |
-
-Tabela 2: Descrição dos Headers.
+Tablea <- data.frame(Coluna = rep(c("Price", "Carat", "Cut", "Color", "Clarity", "x", "y", "z", "Depth", "Table")),
+                     Classificacao = rep(c("Quantitativa", "Quantitativa", "Qualitativa", "Qualitativa", "Qualitativa", "Quantitativa", "Quantitativa", "Quantitativa", "Quantitativa", "Quantitativa")), Variavel = rep(c("Contínua", "Contínua", "Nominal", "Nominal", "Nominal", "Contínua", "Contínua", "Contínua", "Contínua", "Contínua")), Descricao = rep(c(" Preço do diamante em Dólar", "Peso do diamante", "Qualidade do Corte", "Cor D(Melhor) para J(Pior)", "Medição de quão claro é o diamante (I1 (pior), IF (melhor))", "Comprimento", "Largura", "Profundidade", "Porcentagem de profundidade total", "largura do topo do diamante em relação ao ponto mais largo (43-95) ")))
 
 
 
-```{r pressure, echo=FALSE, fig.cap="Dimensões do Diamente", out.width = '100%'}
+knitr::kable(Tablea, caption = "Descrição, Classificação e Tipo de Variável para cada coluna.") %>% kable_styling(latex_options = "HOLD_position")
+```
+
+A Figura \@ref(fig:pressure) ilustra bem o que representam os dados Quantitativos Contínuos dimensionais do diamante. O preço dispensa explicações, e Carat é a principal medida de qualidade, e indica o peso da pedra. As formulas de Table e Depth também podem ser observadas na imagem. 
+
+```{r pressure, echo=FALSE, fig.cap="Dimensões do Diamente", out.width = '100%', fig.pos="H"}
 knitr::include_graphics("Diamante.png")
 ```
+
+
+Para esse relatório não foi utilizado a tabela de dados em formato Long, no entanto é importante apresenta-lo, pois esse formato pode ser interessante para algumas manipulações. A Tabela \@ref(tab:dadoslong) apresenta os dados nesse formato, note que as colunas x, y e z foram disseminadas em outras linhas, ou seja, a quantidade de linhas foi triplicada. 
+
+
+```{r dadoslong, echo=FALSE, fig.cap="Dimensões do Diamente", out.width = '100%'}
+hd_data_long <- head(dadoslong)
+
+knitr::kable(hd_data_long, caption = "Head dos dados extraídos.") %>% kable_styling(latex_options = "HOLD_position")
+```
+
+
 
 \newpage
 # Análise Descritiva
@@ -118,18 +125,17 @@ hist(dados$price, xlab = "Preço", main="Histograma do Preço")
 
 ```
 
-Para os valores dimensões x, y, z, depth, table e carat, os dados são apresentados pela tabela a seguir: 
+Para os valores dimensões x, y, z, depth, table e carat, os cálculos são apresentados pela tabela \@ref(tab:mediasdvar).
 
-| Coluna  | Média              | Variância        | Desvio Padrão    |            
-|---------|--------------------|------------------|------------------|
-| x     | `r mean(dados$x)`  | `r var(dados$x)` | `r sd(dados$x)`  |
-| y       | `r mean(dados$y)`  | `r var(dados$y)` | `r sd(dados$y)`  |
-| z       | `r mean(dados$z)`  | `r var(dados$z)` | `r sd(dados$z)`  |
-| Depth   | `r mean(dados$depth)`  | `r var(dados$depth)` | `r sd(dados$depth)`  |
-| Table   | `r mean(dados$table)`  | `r var(dados$table)` | `r sd(dados$table)`  |
-| Carat   | `r mean(dados$carat)`  | `r var(dados$carat)` | `r sd(dados$carat)`  |
+```{r mediasdvar,fig.cap='Histograma Preço', echo=F,   fig.pos="H"}
 
-Tabela 3: Média, Variância e Desvio para as grandezas quantitativas e contínuas
+tabelas_quant  <- data.frame(Coluna = rep(c("x", "y", "z", "Depth", "Table", "Carat")),
+                     Media = rep(c(mean(dados$x), mean(dados$y), mean(dados$z),  mean(dados$depth),mean(dados$table), mean(dados$carat))), Variancia = rep(c(var(dados$x), var(dados$y), var(dados$z),  var(dados$depth),var(dados$table), var(dados$carat))), Desvio = rep(c(sd(dados$x), sd(dados$y), sd(dados$z),  sd(dados$depth),var(dados$table), sd(dados$carat))))
+
+knitr::kable(tabelas_quant, caption = "Média, Variância e Desvio para as grandezas quantitativas e contínuas que representam as dimensões do Diamante.") %>% kable_styling(latex_options = "HOLD_position")
+
+```
+
 
 Uma visuzalização melhor pode ser vista nos histogramas da Figura \@ref(fig:dim), onde é possível observar que as dimensões x, y e z possuem uma variabilidade maior, mas em questão de Depth e  Table, os dados estão mais concentrados em torno da média. Esses resultados mostram que existe diversidade nos diamantes catalogados, com várias dimensões de x, y e z. O parâmetro "Carat" também possui alta variabilidade, que é consequente aos valores dimensionais, pois essa característica é relacionado ao tamanho e peso da pedra. 
 
@@ -163,14 +169,14 @@ pie(cores, col=rainbow(length(table(dados$color))), label = paste(names(cores), 
 
 ## Análise de Correlação
 
-A Matriz de Correlação disponibilizada a seguir apresenta o Coeficiente de Correlação calculado para todos os parâmetros par a par. Assim é possível identificar quais deles possuem alta relação linear, como por exemplo preço com carat, x, y e z. As variáveis que tem maiores valores são entre x, y e z, o que faz sentido, pois tratam-se das dimensões do diamente, e naturalmente uma pode dependeder da outra. Para tornar a análise mais objetiva, serão consideradas apenas correlações absolutas maiores que 0.8.
+A Matriz de Correlação disponibilizada pela Tabela \@ref(tab:Coor) apresenta o Coeficiente de Correlação calculado para todos os parâmetros par a par. Assim é possível identificar quais deles possuem alta relação linear, como por exemplo preço com carat, x, y e z. As variáveis que tem maiores valores são entre x, y e z, o que faz sentido, pois tratam-se das dimensões do diamente, e naturalmente uma pode dependeder da outra. Para tornar a análise mais objetiva, serão consideradas apenas correlações absolutas maiores que 0.8.
 
 ```{r Coor,  echo=F}
 data_new <- sapply(dados, unclass) #Convert Dados Categóricos em Numéricos
 cormat <- round(cor(data_new),2) #Matriz de Correlação
 #heatmap(cormat, Colv = NA, Rowv = NA)
 
-print(cormat)
+knitr::kable(cormat, caption = "Matriz de Correlação.") %>% kable_styling(latex_options = "HOLD_position")
 ```
 Tabela 4: Matriz de Correlação
 
@@ -231,23 +237,19 @@ plot(x = dados[which(dados$z<20 & dados$z>2),]$x, y = dados[which(dados$z<20 & d
 
 
 ```
-Execeto nas relações entre Preço e Carat, e Carat e X, todas as outras apresentaram resultados correlações melhoradas após a remoção de outiliers. Como os dados estão arrendodados para 2 casas decimais, os casos de x, y e z apresentaram correlação próxima de 1, um resultado bastante expressivo, porém extremamente lógico, pois tratam-se de dimensões do diamente, e podem ter relações naturalmente dependentes. Carat também possui uma boa correlação com essa grandezas, o que é também é condizente, pois Carat é a principal característica utilizada para classificar o peso e dimensão de um diamante. A Tabela 5 apresenta um comparativo entre os dados de correlação.
+Execeto nas relações entre Preço e Carat, e Carat e X, todas as outras apresentaram resultados correlações melhoradas após a remoção de outiliers. Como os dados estão arrendodados para 2 casas decimais, os casos de x, y e z apresentaram correlação próxima de 1, um resultado bastante expressivo, porém extremamente lógico, pois tratam-se de dimensões do diamente, e podem ter relações naturalmente dependentes. Carat também possui uma boa correlação com essa grandezas, o que é também é condizente, pois Carat é a principal característica utilizada para classificar o peso e dimensão de um diamante. A Tabela \@ref(tab:outliers) apresenta um comparativo entre os dados de correlação.
 
 
-| X e Y         |  com Outliers                  |  sem Outliers           |
-|---------------|--------------------------------|-------------------------|
-| Carat e Price |  `r cormat["carat","price"]`   | `r round(cor(dados[-which(dados$carat>3),]$price, dados[-which(dados$carat>3),]$carat),2)`                         |
-| X e Price     |  `r cormat["price","x"]`       | `r round(cor(dados[-which(dados$x<2),]$x,dados[-which(dados$x<2),]$price),2)`                        |
-| Y e Price     |  `r cormat["price","y"]`       | `r round(cor(dados[which(dados$y<20 & dados$y>2),]$y,dados[which(dados$y<20 & dados$y>2),]$price),2)`                        |
-| Z e Price     |  `r cormat["price","z"]`       |`r round(cor(dados[which(dados$z<6 & dados$z>2),]$z,dados[which(dados$z<6 & dados$z>2),]$price),2)`     |
-| Carat e X     |   `r cormat["carat","x"]`      |`r round(cor( dados[which(dados$x>2),]$x,dados[which(dados$x>2),]$carat),2)`         |
-| Carat e Y     |    `r cormat["carat","y"]`     |`r round(cor( dados[which(dados$y<20 & dados$y>0),]$y,dados[which(dados$y<20 & dados$y>0),]$carat),2)`             |
-| Carat e Z     |   `r cormat["carat","z"]`      |`r round(cor(dados[which(dados$z<8 & dados$z>2),]$z,dados[which(dados$z<8 & dados$z>2),]$carat),2)`             |
-| Y e X         |   `r cormat["y","x"]`          |`r round(cor(dados[which(dados$y<25 & dados$y>2),]$x,dados[which(dados$y<25 & dados$y>2),]$y),2)`               |
-| Z e Y         |    `r cormat["y","z"]`         |`r round(cor( dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$y, dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$z),2)`               |
-| Z e X         |    `r cormat["x","z"]`         |`r round(cor(dados[which(dados$z<20 & dados$z>2),]$x,dados[which(dados$z<20 & dados$z>2),]$z),2)`             |
+```{r outliers,fig.cap='Histograma Preço', echo=F,   fig.pos="H"}
 
-Tabela 5: Comparação de Correlações Com e Sem Outliers
+tab_out  <- data.frame(Relacao = rep(c("Carat e Price", "X e Price", "Y e Price", "Z e Price ", "Carat e X", "Carat e Y", " Carat e Z", "Y e X", "Z e Y", "Z e X" )),
+                     Com = rep(c(cormat["carat","price"],cormat["price","x"], cormat["price","y"],  cormat["price","z"],cormat["carat","x"], cormat["carat","y"], cormat["carat","z"],cormat["y","x"], cormat["y","z"],cormat["x","z"] )), Sem = rep(c(round(cor(dados[-which(dados$carat>3),]$price, dados[-which(dados$carat>3),]$carat),2), round(cor(dados[-which(dados$x<2),]$x,dados[-which(dados$x<2),]$price),2),round(cor(dados[which(dados$y<20 & dados$y>2),]$y,dados[which(dados$y<20 & dados$y>2),]$price),2),  round(cor(dados[which(dados$z<6 & dados$z>2),]$z,dados[which(dados$z<6 & dados$z>2),]$price),2),round(cor( dados[which(dados$x>2),]$x,dados[which(dados$x>2),]$carat),2), round(cor( dados[which(dados$y<20 & dados$y>0),]$y,dados[which(dados$y<20 & dados$y>0),]$carat),2),round(cor(dados[which(dados$z<8 & dados$z>2),]$z,dados[which(dados$z<8 & dados$z>2),]$carat),2), round(cor(dados[which(dados$y<25 & dados$y>2),]$x,dados[which(dados$y<25 & dados$y>2),]$y),2), round(cor( dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$y, dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$z),2), round(cor(dados[which(dados$z<20 & dados$z>2),]$x,dados[which(dados$z<20 & dados$z>2),]$z),2) )))
+
+knitr::kable(tab_out, caption = "Comparação de Correlações Com e Sem Outliers.") %>% kable_styling(latex_options = "HOLD_position")
+
+```
+
+           |
 
 # Conclusão
 

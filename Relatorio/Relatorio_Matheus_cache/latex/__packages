@@ -12,3 +12,4 @@ magrittr
 evaluate
 hexbin
 bookdown
+kableExtra
