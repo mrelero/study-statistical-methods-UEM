@@ -96,7 +96,7 @@ knitr::kable(Tablea, caption = "Descrição, Classificação e Tipo de Variável
 
 A Figura \@ref(fig:pressure) ilustra bem o que representam os dados Quantitativos Contínuos dimensionais do diamante. O preço dispensa explicações, e $Carat$ é a principal medida de qualidade, e indica o peso da pedra. As fórmulas de $Table$ e $Depth$ também podem ser observadas na imagem. 
 
-```{r pressure, echo=FALSE, fig.cap="Dimensões do Diamente", out.width = '100%', fig.pos="H"}
+```{r pressure, echo=FALSE, fig.cap="Dimensões do Diamante", out.width = '100%', fig.pos="H"}
 knitr::include_graphics("Diamante.png")
 ```
 
@@ -104,7 +104,7 @@ knitr::include_graphics("Diamante.png")
 Para esse relatório não foi utilizado a tabela de dados em formato $Long$, no entanto é importante apresenta-lo, pois esse formato pode ser interessante para algumas manipulações. A Tabela \@ref(tab:dadoslong) apresenta os dados nesse formato, note que as colunas $x$, $y$ e $z$ foram disseminadas em outras linhas, ou seja, a quantidade de linhas foi triplicada. 
 
 
-```{r dadoslong, echo=FALSE, fig.cap="Dimensões do Diamente", out.width = '100%'}
+```{r dadoslong, echo=FALSE, out.width = '100%'}
 hd_data_long <- head(dadoslong)
 
 knitr::kable(hd_data_long, caption = "Head dos dados extraídos.") %>% kable_styling(latex_options = "HOLD_position")
