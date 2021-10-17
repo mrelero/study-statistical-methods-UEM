@@ -96,10 +96,9 @@ knitr::kable(Tablea, caption = "Descrição, Classificação e Tipo de Variável
 
 A Figura \@ref(fig:pressure) ilustra bem o que representam os dados Quantitativos Contínuos dimensionais do diamante. O preço dispensa explicações, e $Carat$ é a principal medida de qualidade, e indica o peso da pedra. As fórmulas de $Table$ e $Depth$ também podem ser observadas na imagem. 
 
-```{r pressure, echo=FALSE, fig.cap="Dimensões do Diamante", out.width = '100%', fig.pos="H"}
+```{r pressure, echo=FALSE, fig.cap="Dimensões do Diamante.", out.width = '100%', fig.pos="H"}
 knitr::include_graphics("Diamante.png")
 ```
-
 
 Para esse relatório não foi utilizado a tabela de dados em formato $Long$, no entanto é importante apresenta-lo, pois esse formato pode ser interessante para algumas manipulações. A Tabela \@ref(tab:dadoslong) apresenta os dados nesse formato, note que as colunas $x$, $y$ e $z$ foram disseminadas em outras linhas, ou seja, a quantidade de linhas foi triplicada. 
 
@@ -119,7 +118,7 @@ knitr::kable(hd_data_long, caption = "Head dos dados extraídos.") %>% kable_sty
 
 Aqui será apresentada uma análise geral a respeito de todos os parâmetos da base de dados.  A começar pela variável principal, o $Preço$, que por uma visão mais simplista possui média igual `r mean(dados$price)` Dólares, e desvio padrão igual a `r sd(dados$price)`. Um histograma da Figura \@ref(fig:price) mostra a alta variabilidade dos dados, o que indica uma dificuldade grande para prever preços de diamantes, pois estes não seguem um padrão óbvio e assertivo. 
 
-```{r price,fig.cap='Histograma Preço', echo=F,   fig.pos="H"}
+```{r price,fig.cap='Histograma Preço.', echo=F,   fig.pos="H"}
 
 hist(dados$price, xlab = "Preço", main="Histograma do Preço")
 
@@ -127,7 +126,7 @@ hist(dados$price, xlab = "Preço", main="Histograma do Preço")
 
 Para os valores dimensões $x$, $y$, $z$, $depth$, $table$ e $carat$, os cálculos são apresentados pela tabela \@ref(tab:mediasdvar).
 
-```{r mediasdvar,fig.cap='Histograma Preço', echo=F,   fig.pos="H"}
+```{r mediasdvar, echo=F,   fig.pos="H"}
 
 tabelas_quant  <- data.frame(Coluna = rep(c("x", "y", "z", "Depth", "Table", "Carat")),
                      Media = rep(c(mean(dados$x), mean(dados$y), mean(dados$z),  mean(dados$depth),mean(dados$table), mean(dados$carat))), Variancia = rep(c(var(dados$x), var(dados$y), var(dados$z),  var(dados$depth),var(dados$table), var(dados$carat))), Desvio = rep(c(sd(dados$x), sd(dados$y), sd(dados$z),  sd(dados$depth),var(dados$table), sd(dados$carat))))
@@ -152,7 +151,7 @@ hist(dados$carat, xlab = "Carat", main="Histograma de Carat", xlim = c(0,3), bre
 
 Para as colunas com variáveis Qualitativas e Nominais, foi utilizado um gráfico de pizza para apresentar os resultados (Figura \@ref(fig:pie)).  Como é possível observar, em relação aos $Cortes$ 40% são considerados ideais, e 26% premium. Para $Clareza$, apenas 1% tem o pior valor de "I1" e 3% do melhor "1F", e a maioria dos diamantes estão classificados como SI1 VS2, que representam clarezas intermediárias. Já para as $Cores$, existe certo equilíbrio, porém apenas 5% dos dados são relativos a pior cor(J) e 13% como a melhor (D). 
 
-```{r pie, fig.cap='Gráficos de Pizza com as variáveis qualitativas nominais',  fig.pos="H",  echo=F}
+```{r pie, fig.cap='Gráficos de Pizza com as variáveis qualitativas nominais.',  fig.pos="H",  echo=F}
 
 cortes <- round(prop.table(table(dados$cut))*100,0)
 clareza <-round(prop.table(table(dados$clarity))*100,0)
@@ -196,7 +195,7 @@ As correlações analisadas a seguir são listadas abaixo:
 
 Os gráficos de dispersão apresentados pela Figura \@ref(fig:scattercor1) mostram claramente a relação relativa entre as variáveis, em algumas delas o comportamento é quase linear, como $x$ em relação a $y$, $x$ em relação a $z$, e outros. Como visto na análise anterior, o preço possui alta dispersão e desvio, sendo possível visualizar de outra forma na Figura \@ref(fig:scattercor1), pois os pontos estão mais dispersos, devido a alta diversidade de valores. 
 
-```{r scattercor1, fig.cap="Gráficos de Dispersão para Correlação com Outiliers", fig.pos="H",  echo=F}
+```{r scattercor1, fig.cap="Gráficos de Dispersão para Correlação com Outiliers.", fig.pos="H",  echo=F}
 
 
 par(mfrow=c(2,5))
@@ -219,7 +218,7 @@ plot(x = dados$x, y = dados$z, xlab = "x", ylab = "z")
 Com uma inspeção visual dos gráficos de dispersão é possível identificar *Outliers*, ou valores fora do comum, que podem ser excessões, erros de coleta ou ruídos. Para tornar a análise de correlação mais efetiva, foi realizada a remoção desse pontos, que resultou em uma melhor visualização (Figura \@ref(fig:scattercor2)). Portanto, as relaçãos de dimensões($x$, $y$ e $z$) possuem comportamento quase que linear, já $Preço$ e $Carat$ tem um padrão semelhante ao exponencial (Correlação Não-Linear). 
 
 
-```{r scattercor2, fig.cap='Gráficos de Dispersão para Correlação sem Outliers', fig.pos="H" , echo=F}
+```{r scattercor2, fig.cap='Gráficos de Dispersão para Correlação sem Outliers.', fig.pos="H" , echo=F}
 
 
 par(mfrow=c(2,5))
@@ -240,7 +239,7 @@ plot(x = dados[which(dados$z<20 & dados$z>2),]$x, y = dados[which(dados$z<20 & d
 Execeto nas relações entre $Preço$ e $Carat$, e $Carat$ com $X$, todas as outras apresentaram resultados correlações melhoradas após a remoção de *Outliers*. Como os dados estão arrendodados para 2 casas decimais, os casos de $x$, $y$ e $z$ apresentaram correlação próxima de 1, um resultado bastante expressivo, porém extremamente lógico, pois tratam-se de dimensões do diamente, e podem ter relações naturalmente dependentes. $Carat$ também possui uma boa correlação com essa grandezas, o que é também é condizente, pois $Carat$ é a principal característica utilizada para classificar o peso e dimensão de um diamante. A Tabela \@ref(tab:outliers) apresenta um comparativo entre os dados de correlação.
 
 
-```{r outliers,fig.cap='Histograma Preço', echo=F,   fig.pos="H"}
+```{r outliers, echo=F,   fig.pos="H"}
 
 tab_out  <- data.frame(Relacao = rep(c("Carat e Price", "X e Price", "Y e Price", "Z e Price ", "Carat e X", "Carat e Y", " Carat e Z", "Y e X", "Z e Y", "Z e X" )),
                      Com = rep(c(cormat["carat","price"],cormat["price","x"], cormat["price","y"],  cormat["price","z"],cormat["carat","x"], cormat["carat","y"], cormat["carat","z"],cormat["y","x"], cormat["y","z"],cormat["x","z"] )), Sem = rep(c(round(cor(dados[-which(dados$carat>3),]$price, dados[-which(dados$carat>3),]$carat),2), round(cor(dados[-which(dados$x<2),]$x,dados[-which(dados$x<2),]$price),2),round(cor(dados[which(dados$y<20 & dados$y>2),]$y,dados[which(dados$y<20 & dados$y>2),]$price),2),  round(cor(dados[which(dados$z<6 & dados$z>2),]$z,dados[which(dados$z<6 & dados$z>2),]$price),2),round(cor( dados[which(dados$x>2),]$x,dados[which(dados$x>2),]$carat),2), round(cor( dados[which(dados$y<20 & dados$y>0),]$y,dados[which(dados$y<20 & dados$y>0),]$carat),2),round(cor(dados[which(dados$z<8 & dados$z>2),]$z,dados[which(dados$z<8 & dados$z>2),]$carat),2), round(cor(dados[which(dados$y<25 & dados$y>2),]$x,dados[which(dados$y<25 & dados$y>2),]$y),2), round(cor( dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$y, dados[which(dados$z<20 & dados$z>2 & dados$y<20),]$z),2), round(cor(dados[which(dados$z<20 & dados$z>2),]$x,dados[which(dados$z<20 & dados$z>2),]$z),2) )))
